@@ -1,0 +1,22 @@
+{
+    "name": "connectholland/tulip-api-bundle",
+    "description": "Tulip API integration for Symfony 3+.",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Niels Nijens",
+            "email": "niels@connectholland.nl"
+        }
+    ],
+    "require": {
+        "php": "^5.5 || ^7.0",
+        "connectholland/tulip-api-client": "^1.0",
+        "symfony/framework-bundle": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "ConnectHolland\\TulipAPIBundle\\": ""
+        }
+    }
+}
