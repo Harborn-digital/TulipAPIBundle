@@ -5,6 +5,7 @@
 
     <parameters>
         <parameter key='tulip_api.client.class'>ConnectHolland\TulipAPI\Client</parameter>
+        <parameter key='tulip_api.queue_manager.class'>ConnectHolland\TulipAPIBundle\Queue\QueueManager</parameter>
     </parameters>
 
     <services>
@@ -13,6 +14,11 @@
             <argument>%tulip_api.version%</argument>
             <argument>%tulip_api.client_id%</argument>
             <argument>%tulip_api.shared_secret%</argument>
+        </service>
+
+        <service id='tulip_api.queue_manager' class='%tulip_api.queue_manager.class%'>
+            <argument type='service' id='tulip_api.client'/>
+            <argument>%tulip_api.objects%</argument>
         </service>
     </services>
 </container>
