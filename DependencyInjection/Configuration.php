@@ -21,12 +21,36 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('tulip_api');
 
         $rootNode
-                ->children()
-                    ->scalarNode('url')->isRequired()->end()
-                    ->scalarNode('version')->defaultValue('1.1')->end()
-                    ->scalarNode('client_id')->defaultNull()->end()
-                    ->scalarNode('shared_secret')->defaultNull()->end()
-                ->end();
+            ->children()
+                ->scalarNode('url')
+                    ->isRequired()
+                ->end()
+                ->enumNode('version')
+                    ->values(array('1.1'))
+                    ->defaultValue('1.1')
+                ->end()
+                ->scalarNode('client_id')
+                    ->defaultNull()
+                ->end()
+                ->scalarNode('shared_secret')
+                    ->defaultNull()
+                ->end()
+                ->arrayNode('objects')
+                    ->useAttributeAsKey('name')
+                    ->isRequired()
+                    ->prototype('array')
+                        ->children()
+                            ->scalarNode('name')->end()
+                            ->scalarNode('service')
+                                ->isRequired()
+                            ->end()
+                            ->scalarNode('action')
+                                ->defaultValue('save')
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
 
         return $treeBuilder;
     }

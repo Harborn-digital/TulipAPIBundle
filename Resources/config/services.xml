@@ -5,6 +5,9 @@
 
     <parameters>
         <parameter key='tulip_api.client.class'>ConnectHolland\TulipAPI\Client</parameter>
+        <parameter key='tulip_api.queue_manager.class'>ConnectHolland\TulipAPIBundle\Queue\QueueManager</parameter>
+        <parameter key='tulip_api.subscriber.queue.class'>ConnectHolland\TulipAPIBundle\EventListener\TulipAPIQueueSubscriber</parameter>
+        <parameter key='tulip_api.subscriber.send_queue.class'>ConnectHolland\TulipAPIBundle\EventListener\TulipAPISendQueueSubscriber</parameter>
     </parameters>
 
     <services>
@@ -13,6 +16,24 @@
             <argument>%tulip_api.version%</argument>
             <argument>%tulip_api.client_id%</argument>
             <argument>%tulip_api.shared_secret%</argument>
+        </service>
+
+        <service id='tulip_api.queue_manager' class='%tulip_api.queue_manager.class%'>
+            <argument type='service' id='tulip_api.client'/>
+            <argument>%tulip_api.objects%</argument>
+        </service>
+
+        <service id='tulip_api.subscriber.queue' class='%tulip_api.subscriber.queue.class%'>
+            <tag name='doctrine.event_subscriber' connection='default'/>
+
+            <argument type='service' id='tulip_api.queue_manager'/>
+        </service>
+
+        <service id='tulip_api.subscriber.send_queue' class='%tulip_api.subscriber.send_queue.class%'>
+            <tag name='kernel.event_subscriber'/>
+
+            <argument type='service' id='tulip_api.queue_manager'/>
+            <argument type='service' id='doctrine'/>
         </service>
     </services>
 </container>

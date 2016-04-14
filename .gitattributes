@@ -1,8 +1,10 @@
 # Force Unix line-endings
 *.lock eol=lf
 *.json eol=lf
+*.md eol=lf
 *.php eol=lf
 *.xml eol=lf
+*.yml eol=lf
 
 # Remove all test and documentation files from releases with 'export-ignore'.
 /Tests              export-ignore

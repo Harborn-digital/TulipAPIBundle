@@ -26,6 +26,7 @@ class TulipAPIExtension extends Extension
         $container->setParameter('tulip_api.version', $config['version']);
         $container->setParameter('tulip_api.client_id', $config['client_id']);
         $container->setParameter('tulip_api.shared_secret', $config['shared_secret']);
+        $container->setParameter('tulip_api.objects', $config['objects']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
