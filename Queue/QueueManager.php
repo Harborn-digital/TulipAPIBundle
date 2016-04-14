@@ -3,8 +3,10 @@
 namespace ConnectHolland\TulipAPIBundle\Queue;
 
 use ConnectHolland\TulipAPI\Client;
+use ConnectHolland\TulipAPI\ResponseParser;
 use ConnectHolland\TulipAPIBundle\Model\TulipObjectInterface;
 use ConnectHolland\TulipAPIBundle\Model\TulipUploadObjectInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 use GuzzleHttp\Exception\RequestException;
 use ReflectionClass;
 
@@ -60,8 +62,10 @@ class QueueManager
 
     /**
      * Sends the objects in the queue.
+     *
+     * @param ObjectManager $objectManager
      */
-    public function sendQueue()
+    public function sendQueue(ObjectManager $objectManager)
     {
         while ($queuedObject = array_shift($this->queuedObjects)) {
             $objectSettings = $this->getObjectSettings(get_class($queuedObject));
@@ -73,10 +77,19 @@ class QueueManager
             }
 
             try {
-                $this->client->callService($objectSettings['service'], $objectSettings['action'], $parameters, $files);
+                $response = $this->client->callService($objectSettings['service'], $objectSettings['action'], $parameters, $files);
+
+                $responseParser = new ResponseParser($response);
+                if (($tulipId = $responseParser->getDOMDocument()->documentElement->getElementsByTagName('id')->item(0)->nodeValue) && !empty($tulipId)) {
+                    $queuedObject->setTulipId($tulipId);
+
+                    $objectManager->persist($queuedObject);
+                }
             } catch (RequestException $exception) {
             }
         }
+
+        $objectManager->flush();
     }
 
     /**

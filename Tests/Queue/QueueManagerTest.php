@@ -6,6 +6,8 @@ use ConnectHolland\TulipAPI\Client;
 use ConnectHolland\TulipAPIBundle\Model\TulipObjectInterface;
 use ConnectHolland\TulipAPIBundle\Model\TulipUploadObjectInterface;
 use ConnectHolland\TulipAPIBundle\Queue\QueueManager;
+use Doctrine\Common\Persistence\ObjectManager;
+use GuzzleHttp\Psr7\Response;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -59,8 +61,15 @@ class QueueManagerTest extends PHPUnit_Framework_TestCase
         $clientMock->expects($this->never())
                 ->method('callService');
 
+        $objectManagerMock = $this->getMockBuilder(ObjectManager::class)
+                ->getMock();
+        $objectManagerMock->expects($this->never())
+                ->method('persist');
+        $objectManagerMock->expects($this->once())
+                ->method('flush');
+
         $queueManager = new QueueManager($clientMock);
-        $queueManager->sendQueue();
+        $queueManager->sendQueue($objectManagerMock);
     }
 
     /**
@@ -73,17 +82,29 @@ class QueueManagerTest extends PHPUnit_Framework_TestCase
         $objectMock->expects($this->once())
                 ->method('getTulipParameters')
                 ->willReturn(array());
+        $objectMock->expects($this->once())
+                ->method('setTulipId')
+                ->with($this->equalTo('1'));
 
         $clientMock = $this->getMockBuilder(Client::class)
                 ->disableOriginalConstructor()
                 ->getMock();
         $clientMock->expects($this->once())
                 ->method('callService')
-                ->with($this->equalTo(strtolower(get_class($objectMock))), $this->equalTo('save'), $this->equalTo(array()), $this->equalTo(array()));
+                ->with($this->equalTo(strtolower(get_class($objectMock))), $this->equalTo('save'), $this->equalTo(array()), $this->equalTo(array()))
+                ->willReturn(new Response(200, array(), '<?xml version="1.0" encoding="UTF-8"?><response code="1000"><result offset="0" limit="0" total="0"><object><id>1</id></object></result></response>'));
+
+        $objectManagerMock = $this->getMockBuilder(ObjectManager::class)
+                ->getMock();
+        $objectManagerMock->expects($this->once())
+                ->method('persist')
+                ->with($this->equalTo($objectMock));
+        $objectManagerMock->expects($this->once())
+                ->method('flush');
 
         $queueManager = new QueueManager($clientMock);
         $queueManager->queueObject($objectMock);
-        $queueManager->sendQueue();
+        $queueManager->sendQueue($objectManagerMock);
     }
 
     /**
@@ -99,17 +120,29 @@ class QueueManagerTest extends PHPUnit_Framework_TestCase
         $objectMock->expects($this->once())
                 ->method('getTulipUploads')
                 ->willReturn(array());
+        $objectMock->expects($this->once())
+                ->method('setTulipId')
+                ->with($this->equalTo('1'));
 
         $clientMock = $this->getMockBuilder(Client::class)
                 ->disableOriginalConstructor()
                 ->getMock();
         $clientMock->expects($this->once())
                 ->method('callService')
-                ->with($this->equalTo(strtolower(get_class($objectMock))), $this->equalTo('save'), $this->equalTo(array()), $this->equalTo(array()));
+                ->with($this->equalTo(strtolower(get_class($objectMock))), $this->equalTo('save'), $this->equalTo(array()), $this->equalTo(array()))
+                ->willReturn(new Response(200, array(), '<?xml version="1.0" encoding="UTF-8"?><response code="1000"><result offset="0" limit="0" total="0"><object><id>1</id></object></result></response>'));
+
+        $objectManagerMock = $this->getMockBuilder(ObjectManager::class)
+                ->getMock();
+        $objectManagerMock->expects($this->once())
+                ->method('persist')
+                ->with($this->equalTo($objectMock));
+        $objectManagerMock->expects($this->once())
+                ->method('flush');
 
         $queueManager = new QueueManager($clientMock);
         $queueManager->queueObject($objectMock);
-        $queueManager->sendQueue();
+        $queueManager->sendQueue($objectManagerMock);
     }
 
     /**
@@ -117,18 +150,30 @@ class QueueManagerTest extends PHPUnit_Framework_TestCase
      */
     public function testSendQueueWithObjectsMap()
     {
-        $clientMock = $this->getMockBuilder(Client::class)
-                ->disableOriginalConstructor()
-                ->getMock();
-        $clientMock->expects($this->once())
-                ->method('callService')
-                ->with($this->equalTo('contact'), $this->equalTo('save'), $this->equalTo(array()), $this->equalTo(array()));
-
         $objectMock = $this->getMockBuilder(TulipObjectInterface::class)
                 ->getMock();
         $objectMock->expects($this->once())
                 ->method('getTulipParameters')
                 ->willReturn(array());
+        $objectMock->expects($this->once())
+                ->method('setTulipId')
+                ->with($this->equalTo('1'));
+
+        $clientMock = $this->getMockBuilder(Client::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+        $clientMock->expects($this->once())
+                ->method('callService')
+                ->with($this->equalTo('contact'), $this->equalTo('save'), $this->equalTo(array()), $this->equalTo(array()))
+                ->willReturn(new Response(200, array(), '<?xml version="1.0" encoding="UTF-8"?><response code="1000"><result offset="0" limit="0" total="0"><object><id>1</id></object></result></response>'));
+
+        $objectManagerMock = $this->getMockBuilder(ObjectManager::class)
+                ->getMock();
+        $objectManagerMock->expects($this->once())
+                ->method('persist')
+                ->with($this->equalTo($objectMock));
+        $objectManagerMock->expects($this->once())
+                ->method('flush');
 
         $objectsMap = array(
             get_class($objectMock) => array(
@@ -139,6 +184,6 @@ class QueueManagerTest extends PHPUnit_Framework_TestCase
 
         $queueManager = new QueueManager($clientMock, $objectsMap);
         $queueManager->queueObject($objectMock);
-        $queueManager->sendQueue();
+        $queueManager->sendQueue($objectManagerMock);
     }
 }
