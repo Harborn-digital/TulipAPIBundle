@@ -67,6 +67,10 @@ class QueueManager
      */
     public function sendQueue(ObjectManager $objectManager)
     {
+        if (parse_url($this->client->getServiceUrl('', ''), PHP_URL_HOST) === null) {
+            return;
+        }
+
         while ($queuedObject = array_shift($this->queuedObjects)) {
             $objectSettings = $this->getObjectSettings(get_class($queuedObject));
 

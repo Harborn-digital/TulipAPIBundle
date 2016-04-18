@@ -51,6 +51,32 @@ class QueueManagerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests if QueueManager::sendQueue does nothing without a valid Tulip API URL.
+     */
+    public function testSendQueueWithoutValidTulipAPIUrl()
+    {
+        $clientMock = $this->getMockBuilder(Client::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+        $clientMock->expects($this->once())
+                ->method('getServiceUrl')
+                ->with($this->equalTo(''), $this->equalTo(''))
+                ->willReturn('/api//');
+        $clientMock->expects($this->never())
+                ->method('callService');
+
+        $objectManagerMock = $this->getMockBuilder(ObjectManager::class)
+                ->getMock();
+        $objectManagerMock->expects($this->never())
+                ->method('persist');
+        $objectManagerMock->expects($this->never())
+                ->method('flush');
+
+        $queueManager = new QueueManager($clientMock);
+        $queueManager->sendQueue($objectManagerMock);
+    }
+
+    /**
      * Tests if QueueManager::sendQueue does nothing without any errors when no objects are queued.
      */
     public function testSendQueueWithEmptyQueue()
@@ -58,6 +84,9 @@ class QueueManagerTest extends PHPUnit_Framework_TestCase
         $clientMock = $this->getMockBuilder(Client::class)
                 ->disableOriginalConstructor()
                 ->getMock();
+        $clientMock->expects($this->once())
+                ->method('getServiceUrl')
+                ->willReturn('https://api.example.com');
         $clientMock->expects($this->never())
                 ->method('callService');
 
@@ -89,6 +118,9 @@ class QueueManagerTest extends PHPUnit_Framework_TestCase
         $clientMock = $this->getMockBuilder(Client::class)
                 ->disableOriginalConstructor()
                 ->getMock();
+        $clientMock->expects($this->once())
+                ->method('getServiceUrl')
+                ->willReturn('https://api.example.com');
         $clientMock->expects($this->once())
                 ->method('callService')
                 ->with($this->equalTo(strtolower(get_class($objectMock))), $this->equalTo('save'), $this->equalTo(array()), $this->equalTo(array()))
@@ -128,6 +160,9 @@ class QueueManagerTest extends PHPUnit_Framework_TestCase
                 ->disableOriginalConstructor()
                 ->getMock();
         $clientMock->expects($this->once())
+                ->method('getServiceUrl')
+                ->willReturn('https://api.example.com');
+        $clientMock->expects($this->once())
                 ->method('callService')
                 ->with($this->equalTo(strtolower(get_class($objectMock))), $this->equalTo('save'), $this->equalTo(array()), $this->equalTo(array()))
                 ->willReturn(new Response(200, array(), '<?xml version="1.0" encoding="UTF-8"?><response code="1000"><result offset="0" limit="0" total="0"><object><id>1</id></object></result></response>'));
@@ -162,6 +197,9 @@ class QueueManagerTest extends PHPUnit_Framework_TestCase
         $clientMock = $this->getMockBuilder(Client::class)
                 ->disableOriginalConstructor()
                 ->getMock();
+        $clientMock->expects($this->once())
+                ->method('getServiceUrl')
+                ->willReturn('https://api.example.com');
         $clientMock->expects($this->once())
                 ->method('callService')
                 ->with($this->equalTo('contact'), $this->equalTo('save'), $this->equalTo(array()), $this->equalTo(array()))
