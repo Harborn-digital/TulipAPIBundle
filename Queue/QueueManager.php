@@ -75,6 +75,8 @@ class QueueManager
             $objectSettings = $this->getObjectSettings(get_class($queuedObject));
 
             $parameters = $queuedObject->getTulipParameters();
+            $this->convertArrayParameters($parameters);
+
             $files = array();
             if ($queuedObject instanceof TulipUploadObjectInterface) {
                 $files = $queuedObject->getTulipUploads();
@@ -113,5 +115,24 @@ class QueueManager
         }
 
         return $this->objectsMap[$className];
+    }
+
+    /**
+     * Converts arrays in the parameters to be sendable by the Tulip API client.
+     *
+     * @param array $parameters
+     */
+    private function convertArrayParameters(array &$parameters)
+    {
+        foreach ($parameters as $key => $value) {
+            if (is_array($value)) {
+                $values = array_values($value);
+                foreach ($values as $i => $value) {
+                    $parameters[$key.'['.$i.']'] = $value;
+                }
+
+                unset($parameters[$key]);
+            }
+        }
     }
 }
