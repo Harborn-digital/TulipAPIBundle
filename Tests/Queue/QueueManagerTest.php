@@ -224,4 +224,42 @@ class QueueManagerTest extends PHPUnit_Framework_TestCase
         $queueManager->queueObject($objectMock);
         $queueManager->sendQueue($objectManagerMock);
     }
+
+    /**
+     * Tests if QueueManager::convertArrayParameters
+     */
+    public function testSendQueueWithParameterArrayConversion()
+    {
+        $objectMock = $this->getMockBuilder(TulipObjectInterface::class)
+                ->getMock();
+        $objectMock->expects($this->once())
+                ->method('getTulipParameters')
+                ->willReturn(array('array' => array(1 => 'foo', 5 => 'bar')));
+        $objectMock->expects($this->once())
+                ->method('setTulipId')
+                ->with($this->equalTo('1'));
+
+        $clientMock = $this->getMockBuilder(Client::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+        $clientMock->expects($this->once())
+                ->method('getServiceUrl')
+                ->willReturn('https://api.example.com');
+        $clientMock->expects($this->once())
+                ->method('callService')
+                ->with($this->equalTo(strtolower(get_class($objectMock))), $this->equalTo('save'), $this->equalTo(array('array[0]' => 'foo', 'array[1]' => 'bar')), $this->equalTo(array()))
+                ->willReturn(new Response(200, array(), '<?xml version="1.0" encoding="UTF-8"?><response code="1000"><result offset="0" limit="0" total="0"><object><id>1</id></object></result></response>'));
+
+        $objectManagerMock = $this->getMockBuilder(ObjectManager::class)
+                ->getMock();
+        $objectManagerMock->expects($this->once())
+                ->method('persist')
+                ->with($this->equalTo($objectMock));
+        $objectManagerMock->expects($this->once())
+                ->method('flush');
+
+        $queueManager = new QueueManager($clientMock);
+        $queueManager->queueObject($objectMock);
+        $queueManager->sendQueue($objectManagerMock);
+    }
 }
