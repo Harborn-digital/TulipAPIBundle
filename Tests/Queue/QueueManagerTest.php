@@ -118,7 +118,7 @@ class QueueManagerTest extends PHPUnit_Framework_TestCase
         $clientMock = $this->getMockBuilder(Client::class)
                 ->disableOriginalConstructor()
                 ->getMock();
-        $clientMock->expects($this->once())
+        $clientMock->expects($this->exactly(2))
                 ->method('getServiceUrl')
                 ->willReturn('https://api.example.com');
         $clientMock->expects($this->once())
@@ -159,7 +159,7 @@ class QueueManagerTest extends PHPUnit_Framework_TestCase
         $clientMock = $this->getMockBuilder(Client::class)
                 ->disableOriginalConstructor()
                 ->getMock();
-        $clientMock->expects($this->once())
+        $clientMock->expects($this->exactly(2))
                 ->method('getServiceUrl')
                 ->willReturn('https://api.example.com');
         $clientMock->expects($this->once())
@@ -197,7 +197,7 @@ class QueueManagerTest extends PHPUnit_Framework_TestCase
         $clientMock = $this->getMockBuilder(Client::class)
                 ->disableOriginalConstructor()
                 ->getMock();
-        $clientMock->expects($this->once())
+        $clientMock->expects($this->exactly(2))
                 ->method('getServiceUrl')
                 ->willReturn('https://api.example.com');
         $clientMock->expects($this->once())
@@ -242,7 +242,7 @@ class QueueManagerTest extends PHPUnit_Framework_TestCase
         $clientMock = $this->getMockBuilder(Client::class)
                 ->disableOriginalConstructor()
                 ->getMock();
-        $clientMock->expects($this->once())
+        $clientMock->expects($this->exactly(2))
                 ->method('getServiceUrl')
                 ->willReturn('https://api.example.com');
         $clientMock->expects($this->once())
