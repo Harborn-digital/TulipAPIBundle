@@ -1,0 +1,77 @@
+{% extends 'WebProfilerBundle:Profiler:layout.html.twig' %}
+
+{% block toolbar %}
+    {% if collector.queueResults|length > 0 %}
+        {% set icon %}
+            {# Content displayed as a panel in the toolbar #}
+            <span class='icon'>
+                <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA5xJREFUeNqUVV9IU2EUP9vu3XbvNrfdTZlzEym3oRNF+zNCJCEYYkpSezGJfOgpoZeg53rosZDeei6QnqInBZFAqEd7s5AylSDETav9udvu3b2dc91dY7o7O3C437593/mdP79zPpOqqlAvs7OztbUkSTA0NOTZ2tr6UygUFJPJBGazGdLpNOzt7YHD4YDR0VHIZDLavi5LS0u1NQMN0tnZqX0JmGVZWFhYeLO+vr64ubm5bLfbwWq1wurqKlQqFe1Mo4ONcgIgGAxq33K5DMPDw+OCICSnpqbO7ezsJLa3tw/J62KxCDzPa2AUla6niblxw+l0aup2u2FwcPC+5gXD9M7MzCySkcPDQ+ju7oZEIgHT09Phycnr816vF3w+X00NI7BYLCDLMoRCoWhXV9dNWpP09PTcmZiYWF5bW1vy+/3auUuXE/eCncGHmUz6rSiKv+vr0DSCg4MD2N/fh3A4nCI8RVGAlICSyeRzBA5SkdEYLwi++YqiOEKh8C1KKZ3RHWoKgAYgFosxkUhkni7phaSiYooCqVTqaUdHB8TjA3cxim5imlcQHpDhbDYLuVzOGIC8wwJeQI2Q5zoAKQEiy+bj8XjS7fHMkVE6Y7Xahtrb20eUKrMMa+DxeKCvr2+KPKbLjSJJZRgbG3v99dt3N50hIaDeSPQ2LjfOxCJkxbTuXaPKcoX6o73N5bTqZ+jLstYbeNdM1DUEiEajYY7j+usbqVHpP59P0LpXpTRSpKp6HnumlxhmCICXYvhhT/NeVwJgGQbaXC6QKZUEqqomnndcxW5vMwSw2WwXjYzXUoWGvV6P1sHaHv4uS9JYqVTuNwTA/A8Q9VoBUBQMY8GBx2s1oN+Y//5AINBvyCK8HGw2VxqF6uFxt8HR0S9tLUmyUBDFgCEACt9qQtYDYEq1elCPYJpssmRytIqgBP8hxCQ7ZwcRJyxGjhjV5mhWAwT40YyezZRDAG2UmM1ZjufShgD4cn2gS2dh0r9iM9WUKZ9KRXGjVQ1WaCIgCHvmPKnHKhbyr3KVykfDCHZ3d7dx4L2s8buFUrTFUhGbrfJeLBVXiqWSYhiBi7pTlh+h9iHINSNGHTuhEk0/x6KxOc7BnZimJyKgtxaHmZjP5yfx7X2MOT6op2W9YgRZjPYF6hWny/HT7/ODT2jxZNLFaqOVseBPkN/PMKpx5PsI7ncgLe2of/DcFzT8LpfP71MBVOV4CFLaWOxwXf4KMABXhacYx5ILcwAAAABJRU5ErkJggg=='/>
+            </span>
+        {% endset %}
+
+        {% set text %}
+            {# Content displayed when hovering the mouse over the toolbar panel #}
+            <div class='sf-toolbar-info-piece'>
+                <b>Tulip API Calls</b>
+                <span class='sf-toolbar-status'>{{ collector.queueResults|length }}</span>
+            </div>
+        {% endset %}
+
+        {# the 'link' value set to 'false' means that this panel doesn't
+           show a section in the web profiler #}
+        {{ include('@WebProfiler/Profiler/toolbar_item.html.twig') }}
+    {% endif %}
+{% endblock %}
+
+{% block menu %}
+    {# Left-hand menu in the full-screen profiler. #}
+    <span class='label{% if collector.queueResults|length == 0 %} disabled{% endif %}'>
+        <span class='icon'>
+            <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA5xJREFUeNqUVV9IU2EUP9vu3XbvNrfdTZlzEym3oRNF+zNCJCEYYkpSezGJfOgpoZeg53rosZDeei6QnqInBZFAqEd7s5AylSDETav9udvu3b2dc91dY7o7O3C437593/mdP79zPpOqqlAvs7OztbUkSTA0NOTZ2tr6UygUFJPJBGazGdLpNOzt7YHD4YDR0VHIZDLavi5LS0u1NQMN0tnZqX0JmGVZWFhYeLO+vr64ubm5bLfbwWq1wurqKlQqFe1Mo4ONcgIgGAxq33K5DMPDw+OCICSnpqbO7ezsJLa3tw/J62KxCDzPa2AUla6niblxw+l0aup2u2FwcPC+5gXD9M7MzCySkcPDQ+ju7oZEIgHT09Phycnr816vF3w+X00NI7BYLCDLMoRCoWhXV9dNWpP09PTcmZiYWF5bW1vy+/3auUuXE/eCncGHmUz6rSiKv+vr0DSCg4MD2N/fh3A4nCI8RVGAlICSyeRzBA5SkdEYLwi++YqiOEKh8C1KKZ3RHWoKgAYgFosxkUhkni7phaSiYooCqVTqaUdHB8TjA3cxim5imlcQHpDhbDYLuVzOGIC8wwJeQI2Q5zoAKQEiy+bj8XjS7fHMkVE6Y7Xahtrb20eUKrMMa+DxeKCvr2+KPKbLjSJJZRgbG3v99dt3N50hIaDeSPQ2LjfOxCJkxbTuXaPKcoX6o73N5bTqZ+jLstYbeNdM1DUEiEajYY7j+usbqVHpP59P0LpXpTRSpKp6HnumlxhmCICXYvhhT/NeVwJgGQbaXC6QKZUEqqomnndcxW5vMwSw2WwXjYzXUoWGvV6P1sHaHv4uS9JYqVTuNwTA/A8Q9VoBUBQMY8GBx2s1oN+Y//5AINBvyCK8HGw2VxqF6uFxt8HR0S9tLUmyUBDFgCEACt9qQtYDYEq1elCPYJpssmRytIqgBP8hxCQ7ZwcRJyxGjhjV5mhWAwT40YyezZRDAG2UmM1ZjufShgD4cn2gS2dh0r9iM9WUKZ9KRXGjVQ1WaCIgCHvmPKnHKhbyr3KVykfDCHZ3d7dx4L2s8buFUrTFUhGbrfJeLBVXiqWSYhiBi7pTlh+h9iHINSNGHTuhEk0/x6KxOc7BnZimJyKgtxaHmZjP5yfx7X2MOT6op2W9YgRZjPYF6hWny/HT7/ODT2jxZNLFaqOVseBPkN/PMKpx5PsI7ncgLe2of/DcFzT8LpfP71MBVOV4CFLaWOxwXf4KMABXhacYx5ILcwAAAABJRU5ErkJggg=='/>
+        </span>
+        <strong>Tulip API</strong>
+    </span>
+{% endblock %}
+
+{% block panel %}
+    <h2>Tulip API</h2>
+    <h3>Requests &amp; responses</h3>
+    {% if collector.queueResults is empty %}
+        <div class='empty'>
+            <p>No Tulip API requests were performed.</p>
+        </div>
+    {% else %}
+        <table>
+            <tr>
+                <th>#</th>
+                <th>Info</th>
+            </tr>
+
+            {% for result in collector.queueResults %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>
+                    {{ result.url }}
+
+                    <div>
+                        <strong>Parameters</strong>:<br/>
+                        {{ result.parameters|yaml_encode }}
+                    </div>
+                    {% if result.response_body is not empty %}
+                        <div>
+                            <strong>Response</strong>:<br/>
+                            {{ result.response_body }}
+                        </div>
+                    {% endif %}
+                    {% if result.exception is not empty %}
+                        <div>
+                            <strong>Exception</strong>:<br/>
+                            {{ result.exception }}
+                        </div>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+{% endblock %}
