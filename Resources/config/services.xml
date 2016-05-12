@@ -27,6 +27,7 @@
             <tag name='doctrine.event_subscriber' connection='default'/>
 
             <argument type='service' id='tulip_api.queue_manager'/>
+            <argument>%kernel.debug%</argument>
         </service>
 
         <service id='tulip_api.subscriber.send_queue' class='%tulip_api.subscriber.send_queue.class%'>
