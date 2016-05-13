@@ -3,6 +3,7 @@
 namespace ConnectHolland\TulipAPIBundle\Tests\Queue;
 
 use ConnectHolland\TulipAPI\Client;
+use ConnectHolland\TulipAPI\Exception\NotAuthorizedException;
 use ConnectHolland\TulipAPIBundle\Model\TulipObjectInterface;
 use ConnectHolland\TulipAPIBundle\Model\TulipUploadObjectInterface;
 use ConnectHolland\TulipAPIBundle\Queue\QueueManager;
@@ -48,6 +49,20 @@ class QueueManagerTest extends PHPUnit_Framework_TestCase
         $queueManager->queueObject($objectMock);
 
         $this->assertAttributeSame(array($objectMock), 'queuedObjects', $queueManager);
+    }
+
+    /**
+     * Tests if QueueManager::getQueueResults returns an array.
+     */
+    public function testGetQueueResults()
+    {
+        $clientMock = $this->getMockBuilder(Client::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+
+        $queueManager = new QueueManager($clientMock);
+
+        $this->assertInternalType('array', $queueManager->getQueueResults());
     }
 
     /**
@@ -226,7 +241,7 @@ class QueueManagerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests if QueueManager::convertArrayParameters
+     * Tests if QueueManager::convertArrayParameters converts an array parameter to multiple key-values.
      */
     public function testSendQueueWithParameterArrayConversion()
     {
@@ -261,5 +276,60 @@ class QueueManagerTest extends PHPUnit_Framework_TestCase
         $queueManager = new QueueManager($clientMock);
         $queueManager->queueObject($objectMock);
         $queueManager->sendQueue($objectManagerMock);
+    }
+
+    public function testSendQueueStoresExceptionWithQueueResult()
+    {
+        $objectMock = $this->getMockBuilder(TulipObjectInterface::class)
+                ->getMock();
+        $objectMock->expects($this->once())
+                ->method('getTulipParameters')
+                ->willReturn(array('array' => array(1 => 'foo', 5 => 'bar')));
+        $objectMock->expects($this->never())
+                ->method('setTulipId');
+
+        $response = new Response(403, array(), "<?xml version='1.0' encoding='UTF-8'?><response code='1001'><error>Not authorized to access the Tulip API: Host '127.0.0.1' is not allowed to access the API.</error><result offset='0' limit='0' total='0'/></response>");
+
+        $exceptionMock = $this->getMockBuilder(NotAuthorizedException::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+        $exceptionMock->expects($this->once())
+                ->method('getResponse')
+                ->willReturn($response);
+
+        $clientMock = $this->getMockBuilder(Client::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+        $clientMock->expects($this->exactly(2))
+                ->method('getServiceUrl')
+                ->willReturn('https://api.example.com');
+        $clientMock->expects($this->once())
+                ->method('callService')
+                ->with($this->equalTo(strtolower(get_class($objectMock))), $this->equalTo('save'), $this->equalTo(array('array[0]' => 'foo', 'array[1]' => 'bar')), $this->equalTo(array()))
+                ->willThrowException($exceptionMock);
+
+        $objectManagerMock = $this->getMockBuilder(ObjectManager::class)
+                ->getMock();
+        $objectManagerMock->expects($this->never())
+                ->method('persist');
+        $objectManagerMock->expects($this->once())
+                ->method('flush');
+
+        $queueManager = new QueueManager($clientMock);
+        $queueManager->queueObject($objectMock);
+        $queueManager->sendQueue($objectManagerMock);
+
+        $this->assertEquals(array(
+            array(
+                'url' => 'https://api.example.com',
+                'parameters' => array(
+                    'array[0]' => 'foo',
+                    'array[1]' => 'bar',
+                ),
+                'response' => $response,
+                'response_body' => "<?xml version='1.0' encoding='UTF-8'?><response code='1001'><error>Not authorized to access the Tulip API: Host '127.0.0.1' is not allowed to access the API.</error><result offset='0' limit='0' total='0'/></response>",
+                'exception' => $exceptionMock,
+            ),
+        ), $queueManager->getQueueResults());
     }
 }
