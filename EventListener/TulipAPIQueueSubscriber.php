@@ -38,7 +38,7 @@ class TulipAPIQueueSubscriber implements EventSubscriber
     public function __construct(QueueManager $queueManager, $debug = false)
     {
         $this->queueManager = $queueManager;
-        $this->debug = true;
+        $this->debug = $debug;
     }
 
     /**
@@ -57,16 +57,6 @@ class TulipAPIQueueSubscriber implements EventSubscriber
      *
      * @param LifecycleEventArgs $args
      */
-    public function postUpdate(LifecycleEventArgs $args)
-    {
-        $this->postPersist($args);
-    }
-
-    /**
-     * Adds the object to the Tulip API queue manager for sending to Tulip when the object implements the TulipObjectInterface.
-     *
-     * @param LifecycleEventArgs $args
-     */
     public function postPersist(LifecycleEventArgs $args)
     {
         $object = $args->getObject();
@@ -78,5 +68,15 @@ class TulipAPIQueueSubscriber implements EventSubscriber
                 $this->queueManager->sendQueue($args->getObjectManager());
             }
         }
+    }
+
+    /**
+     * Adds the object to the Tulip API queue manager for sending to Tulip when the object implements the TulipObjectInterface.
+     *
+     * @param LifecycleEventArgs $args
+     */
+    public function postUpdate(LifecycleEventArgs $args)
+    {
+        $this->postPersist($args);
     }
 }
