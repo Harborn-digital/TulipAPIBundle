@@ -6,6 +6,7 @@ use ConnectHolland\TulipAPIBundle\Model\TulipObjectInterface;
 use ConnectHolland\TulipAPIBundle\Queue\QueueManager;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Doctrine\ORM\Events;
 
 /**
  * TulipAPIQueueSubscriber queues valid Doctrine entities for sending to Tulip.
@@ -22,13 +23,22 @@ class TulipAPIQueueSubscriber implements EventSubscriber
     private $queueManager;
 
     /**
+     * The boolean indicating that the kernel is in debug mode and queued objects are sent directly.
+     *
+     * @var bool
+     */
+    private $debug;
+
+    /**
      * Constructs a new TulipAPIQueueSubscriber instance.
      *
      * @param QueueManager $queueManager
+     * @param bool         $debug
      */
-    public function __construct(QueueManager $queueManager)
+    public function __construct(QueueManager $queueManager, $debug = false)
     {
         $this->queueManager = $queueManager;
+        $this->debug = true;
     }
 
     /**
@@ -37,8 +47,8 @@ class TulipAPIQueueSubscriber implements EventSubscriber
     public function getSubscribedEvents()
     {
         return array(
-            'postUpdate',
-            'postPersist',
+            Events::postPersist,
+            Events::postUpdate,
         );
     }
 
@@ -63,6 +73,10 @@ class TulipAPIQueueSubscriber implements EventSubscriber
         $objectChangeset = $args->getObjectManager()->getUnitOfWork()->getEntityChangeSet($object);
         if ($object instanceof TulipObjectInterface && (count($objectChangeset) > 1 || isset($objectChangeset['tulipId']) === false)) {
             $this->queueManager->queueObject($object);
+
+            if ($this->debug === true) {
+                $this->queueManager->sendQueue($args->getObjectManager());
+            }
         }
     }
 }

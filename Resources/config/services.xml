@@ -8,6 +8,7 @@
         <parameter key='tulip_api.queue_manager.class'>ConnectHolland\TulipAPIBundle\Queue\QueueManager</parameter>
         <parameter key='tulip_api.subscriber.queue.class'>ConnectHolland\TulipAPIBundle\EventListener\TulipAPIQueueSubscriber</parameter>
         <parameter key='tulip_api.subscriber.send_queue.class'>ConnectHolland\TulipAPIBundle\EventListener\TulipAPISendQueueSubscriber</parameter>
+        <parameter key='tulip_api.data_collector.class'>ConnectHolland\TulipAPIBundle\DataCollector\TulipAPIDataCollector</parameter>
     </parameters>
 
     <services>
@@ -27,6 +28,7 @@
             <tag name='doctrine.event_subscriber' connection='default'/>
 
             <argument type='service' id='tulip_api.queue_manager'/>
+            <argument>%kernel.debug%</argument>
         </service>
 
         <service id='tulip_api.subscriber.send_queue' class='%tulip_api.subscriber.send_queue.class%'>
@@ -34,6 +36,12 @@
 
             <argument type='service' id='tulip_api.queue_manager'/>
             <argument type='service' id='doctrine'/>
+        </service>
+
+        <service id='tulip_api.data_collector' class='%tulip_api.data_collector.class%' public='false'>
+            <tag name='data_collector' id='tulip_api' template='@TulipAPI/DataCollector/tulip_api.html.twig' priority='250'/>
+
+            <argument type='service' id='tulip_api.queue_manager'/>
         </service>
     </services>
 </container>

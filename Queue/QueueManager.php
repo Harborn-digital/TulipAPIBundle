@@ -39,6 +39,13 @@ class QueueManager
     private $queuedObjects = array();
 
     /**
+     * The array with results of the sent queue.
+     *
+     * @var array
+     */
+    private $queueResults = array();
+
+    /**
      * Constructs a new QueueManager instance.
      *
      * @param Client $client
@@ -82,6 +89,7 @@ class QueueManager
                 $files = $queuedObject->getTulipUploads();
             }
 
+            $exception = null;
             try {
                 $response = $this->client->callService($objectSettings['service'], $objectSettings['action'], $parameters, $files);
 
@@ -92,10 +100,29 @@ class QueueManager
                     $objectManager->persist($queuedObject);
                 }
             } catch (RequestException $exception) {
+                $response = $exception->getResponse();
             }
+
+            $this->queueResults[] = array(
+                'url' => $this->client->getServiceUrl($objectSettings['service'], $objectSettings['action']),
+                'parameters' => $parameters,
+                'response' => $response,
+                'response_body' => strval($response->getBody()),
+                'exception' => $exception,
+            );
         }
 
         $objectManager->flush();
+    }
+
+    /**
+     * Returns the array with results of the sent queue.
+     *
+     * @return array
+     */
+    public function getQueueResults()
+    {
+        return $this->queueResults;
     }
 
     /**
