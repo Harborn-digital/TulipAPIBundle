@@ -39,15 +39,10 @@ class SynchronizeCommand extends ContainerAwareCommand
 
         $io->section('Preparing synchronization of all objects to: '.$url);
 
-        $classMetaDataInstances = $this->getContainer()
-            ->get('doctrine')
-            ->getManager()
-            ->getMetadataFactory()
-            ->getAllMetadata();
-
-        foreach ($classMetaDataInstances as $classMetaDataInstance) {
-            if (is_subclass_of($classMetaDataInstance->getName(), TulipObjectInterface::class)) {
-                $io->title(sprintf('Synchronizing "%s" objects.', $classMetaDataInstance->getName()));
+        $objectClassNames = array_keys($this->getContainer()->getParameter('tulip_api.objects'));
+        foreach ($objectClassNames as $objectClassName) {
+            if (is_subclass_of($objectClassName, TulipObjectInterface::class)) {
+                $io->title(sprintf('Synchronizing "%s" objects.', $objectClassName));
 
                 $queueManager = $this->getContainer()
                     ->get('tulip_api.queue_manager');
@@ -59,13 +54,13 @@ class SynchronizeCommand extends ContainerAwareCommand
                 /* @var $entityManager EntityManager */
                 $count = $entityManager->createQueryBuilder()
                     ->select('count(o.id)')
-                    ->from($classMetaDataInstance->getName(), 'o')
+                    ->from($objectClassName, 'o')
                     ->getQuery()
                     ->getSingleScalarResult();
 
                 $query = $entityManager->createQueryBuilder()
                     ->select('o')
-                    ->from($classMetaDataInstance->getName(), 'o')
+                    ->from($objectClassName, 'o')
                     ->getQuery();
 
                 $io->progressStart($count);
