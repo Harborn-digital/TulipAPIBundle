@@ -30,6 +30,7 @@ class QueueManagerTest extends PHPUnit_Framework_TestCase
         $queueManager = new QueueManager($clientMock);
 
         $this->assertAttributeSame($clientMock, 'client', $queueManager);
+        $this->assertAttributeSame(null, 'fileUploadPath', $queueManager);
         $this->assertAttributeSame(array(), 'objectsMap', $queueManager);
     }
 
@@ -162,6 +163,9 @@ class QueueManagerTest extends PHPUnit_Framework_TestCase
         $objectMock = $this->getMockBuilder(TulipUploadObjectInterface::class)
                 ->getMock();
         $objectMock->expects($this->once())
+                ->method('setFileUploadPath')
+                ->with($this->equalTo('/file/upload/path'));
+        $objectMock->expects($this->once())
                 ->method('getTulipParameters')
                 ->willReturn(array());
         $objectMock->expects($this->once())
@@ -190,7 +194,7 @@ class QueueManagerTest extends PHPUnit_Framework_TestCase
         $objectManagerMock->expects($this->once())
                 ->method('flush');
 
-        $queueManager = new QueueManager($clientMock);
+        $queueManager = new QueueManager($clientMock, array(), '/file/upload/path');
         $queueManager->queueObject($objectMock);
         $queueManager->sendQueue($objectManagerMock);
     }
@@ -278,6 +282,9 @@ class QueueManagerTest extends PHPUnit_Framework_TestCase
         $queueManager->sendQueue($objectManagerMock);
     }
 
+    /**
+     * Tests if QueueManager::sendQueue stores an occured response exception with inside the queue result.
+     */
     public function testSendQueueStoresExceptionWithQueueResult()
     {
         $objectMock = $this->getMockBuilder(TulipObjectInterface::class)

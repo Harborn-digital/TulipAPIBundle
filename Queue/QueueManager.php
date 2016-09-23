@@ -32,6 +32,13 @@ class QueueManager
     private $objectsMap;
 
     /**
+     * The file upload path.
+     *
+     * @var string|null
+     */
+    private $fileUploadPath;
+
+    /**
      * The objects queued for sending to Tulip.
      *
      * @var TulipObjectInterface[]
@@ -48,12 +55,14 @@ class QueueManager
     /**
      * Constructs a new QueueManager instance.
      *
-     * @param Client $client
-     * @param array  $objectsMap
+     * @param Client      $client
+     * @param array       $objectsMap
+     * @param string|null $fileUploadPath
      */
-    public function __construct(Client $client, array $objectsMap = array())
+    public function __construct(Client $client, array $objectsMap = array(), $fileUploadPath = null)
     {
         $this->client = $client;
+        $this->fileUploadPath = $fileUploadPath;
         $this->objectsMap = $objectsMap;
     }
 
@@ -64,6 +73,10 @@ class QueueManager
      */
     public function queueObject(TulipObjectInterface $object)
     {
+        if ($object instanceof TulipUploadObjectInterface) {
+            $object->setFileUploadPath($this->fileUploadPath);
+        }
+
         $this->queuedObjects[] = $object;
     }
 

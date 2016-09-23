@@ -15,4 +15,11 @@ interface TulipUploadObjectInterface extends TulipObjectInterface
      * @return resource[]
      */
     public function getTulipUploads();
+
+    /**
+     * Sets the base path for file uploads.
+     *
+     * @param string $path
+     */
+    public function setFileUploadPath($path);
 }

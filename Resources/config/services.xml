@@ -22,6 +22,7 @@
         <service id='tulip_api.queue_manager' class='%tulip_api.queue_manager.class%'>
             <argument type='service' id='tulip_api.client'/>
             <argument>%tulip_api.objects%</argument>
+            <argument>%tulip_api.file_upload_path%</argument>
         </service>
 
         <service id='tulip_api.subscriber.queue' class='%tulip_api.subscriber.queue.class%'>
