@@ -141,20 +141,24 @@ class QueueManager
     /**
      * Returns the object settings based on the class name.
      *
+     * @param string $className
+     *
      * @return array
      */
     private function getObjectSettings($className)
     {
-        if (isset($this->objectsMap[$className]) === false) {
-            $reflectionClass = new ReflectionClass($className);
-
-            $this->objectsMap[$className] = array(
-                'service' => strtolower($reflectionClass->getShortName()),
-                'action' => 'save',
-            );
+        foreach ($this->objectsMap as $mapClass => $parameters) {
+            if ($mapClass === $className || is_subclass_of($className, $mapClass)) {
+                return $parameters;
+            }
         }
 
-        return $this->objectsMap[$className];
+        $reflectionClass = new ReflectionClass($className);
+
+        return array(
+            'service' => strtolower($reflectionClass->getShortName()),
+            'action' => 'save',
+        );
     }
 
     /**
