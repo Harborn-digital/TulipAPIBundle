@@ -7,6 +7,9 @@ matrix:
     - php: 5.5
     - php: 5.6
     - php: 7.0
+    - php: 7.0
+      env: SYMFONY_VERSION=2.8.*
+    - php: 7.1
     - php: nightly
   allow_failures:
     - php: nightly
@@ -14,7 +17,9 @@ matrix:
 
 before_install: composer self-update
 
-install: composer install
+install:
+  - if [ "$SYMFONY_VERSION" != "" ]; then composer require "symfony/symfony:${SYMFONY_VERSION}" --no-update; composer update symfony/*; fi;
+  - if [ "$SYMFONY_VERSION" = "" ]; then composer install; fi;
 
 before_script: mkdir -p build/logs
 
