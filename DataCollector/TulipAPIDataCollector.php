@@ -63,4 +63,12 @@ class TulipAPIDataCollector extends DataCollector
     {
         return 'tulip_api';
     }
+
+    /**
+     * Reset data.
+     */
+    public function reset()
+    {
+       $this->data = null;
+    }
 }
