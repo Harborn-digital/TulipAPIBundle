@@ -19,7 +19,7 @@ interface TulipObjectInterface
     /**
      * Sets the Tulip ID returned from the API response.
      *
-     * @param int $tulipId
+     * @param null|int $tulipId
      */
-    public function setTulipId($tulipId);
+    public function setTulipId(?int $tulipId);
 }

@@ -4,16 +4,20 @@ sudo: false
 
 matrix:
   include:
-    - php: 5.5
-    - php: 5.6
     - php: 7.0
     - php: 7.0
-      env: SYMFONY_VERSION=2.8.*
+      env: SYMFONY_VERSION=3.3.*
+    - php: 7.0
+      env: SYMFONY_VERSION=3.4.*
+    - php: 7.0
+      env: SYMFONY_VERSION=4.0.*
     - php: 7.1
-    - php: nightly
-  allow_failures:
-    - php: nightly
-  fast_finish: true
+    - php: 7.1
+      env: SYMFONY_VERSION=3.3.*
+    - php: 7.1
+      env: SYMFONY_VERSION=3.4.*
+    - php: 7.1
+      env: SYMFONY_VERSION=4.0.*
 
 before_install: composer self-update
 

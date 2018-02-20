@@ -19,7 +19,7 @@ interface TulipUploadObjectInterface extends TulipObjectInterface
     /**
      * Sets the base path for file uploads.
      *
-     * @param string $path
+     * @param null|string $path
      */
-    public function setFileUploadPath($path);
+    public function setFileUploadPath(?string $path);
 }
