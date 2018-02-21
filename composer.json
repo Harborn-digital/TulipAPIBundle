@@ -1,6 +1,6 @@
 {
     "name": "connectholland/tulip-api-bundle",
-    "description": "Tulip API integration for Symfony Framework version 3 and 4.",
+    "description": "Tulip API integration for Symfony Framework version 3.3, 3.4 and 4.",
     "type": "symfony-bundle",
     "license": "MIT",
     "authors": [
@@ -11,9 +11,9 @@
     ],
     "require": {
         "php": "^7.0",
-        "connectholland/tulip-api-client": "^1.1",
+        "connectholland/tulip-api-client": "^1.1.1",
         "doctrine/orm": "^2.5",
-        "symfony/framework-bundle": "^3.0 || ^4.0"
+        "symfony/framework-bundle": "^3.3 || ^4.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7"

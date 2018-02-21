@@ -6,7 +6,7 @@
 [![Build Status][icon-build]][link-build]
 [![Code Coverage][icon-coverage]][link-coverage]
 
-Tulip API integration for Symfony Framework version and 3 and 4.
+Tulip API integration for Symfony Framework version and 3.3, 3.4 and 4.
 
 ## Installation using Composer
 Run the following command to add the package to the composer.json of your project:
