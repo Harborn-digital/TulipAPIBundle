@@ -2,7 +2,7 @@
 
 [![Latest version on Packagist][icon-version]][link-version]
 [![Software License][icon-license]](LICENSE.md)
-[![Scrutinizer Code Quality][ico-quality]][link-quality]
+[![Scrutinizer Code Quality][icon-quality]][link-quality]
 [![Build Status][icon-build]][link-build]
 [![Code Coverage][icon-coverage]][link-coverage]
 
