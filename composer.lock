@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "f009d6ac32e5071cfd31d4fc13894e49",
+    "content-hash": "2bc009c94419273386602c08513d9af6",
     "packages": [
         {
             "name": "connectholland/tulip-api-client",
@@ -3476,10 +3476,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^5.5 || ^7.0"
+        "php": "^7.0"
     },
-    "platform-dev": [],
-    "platform-overrides": {
-        "php": "5.5.38"
-    }
+    "platform-dev": []
 }
