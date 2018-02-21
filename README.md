@@ -2,10 +2,11 @@
 
 [![Latest version on Packagist][icon-version]][link-version]
 [![Software License][icon-license]](LICENSE.md)
+[![Scrutinizer Code Quality][ico-quality]][link-quality]
 [![Build Status][icon-build]][link-build]
-[![Coverage Status][icon-coverage]][link-coverage]
+[![Code Coverage][icon-coverage]][link-coverage]
 
-Tulip API integration for Symfony Framework version 2.8 and 3.
+Tulip API integration for Symfony Framework version and 3 and 4.
 
 ## Installation using Composer
 Run the following command to add the package to the composer.json of your project:
@@ -72,11 +73,13 @@ This package is licensed under the MIT License. Please see the [LICENSE file](LI
 
 [icon-version]: https://img.shields.io/packagist/v/connectholland/tulip-api-bundle.svg
 [icon-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg
-[icon-build]: https://travis-ci.org/ConnectHolland/TulipAPIBundle.svg?branch=master
-[icon-coverage]: https://coveralls.io/repos/ConnectHolland/TulipAPIBundle/badge.svg?branch=master
+[icon-build]: https://scrutinizer-ci.com/g/ConnectHolland/TulipAPIBundle/badges/build.png?b=master
+[icon-coverage]: https://scrutinizer-ci.com/g/ConnectHolland/TulipAPIBundle/badges/coverage.png?b=master
+[icon-quality]: https://scrutinizer-ci.com/g/ConnectHolland/TulipAPIBundle/badges/quality-score.png?b=master
 
 [link-version]: https://packagist.org/packages/connectholland/tulip-api-bundle
-[link-build]: https://travis-ci.org/ConnectHolland/TulipAPIBundle
-[link-coverage]: https://coveralls.io/r/ConnectHolland/TulipAPIBundle?branch=master
+[link-build]: https://scrutinizer-ci.com/g/ConnectHolland/TulipAPIBundle/build-status/master
+[link-coverage]: https://scrutinizer-ci.com/g/ConnectHolland/TulipAPIBundle/?branch=master
+[link-quality]: https://scrutinizer-ci.com/g/ConnectHolland/TulipAPIBundle/?branch=master
 [link-author]: https://github.com/niels-nijens
 [link-contributors]: ../../contributors
