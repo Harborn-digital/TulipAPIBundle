@@ -1,0 +1,67 @@
+checks:
+    php: true
+
+coding_style:
+    php: {  }
+
+build:
+    environment:
+        timezone: Europe/Amsterdam
+        postgresql: false
+        rabbitmq: false
+        redis: false
+        mysql: false
+        php:
+            ini:
+                'date.timezone': 'Europe/Amsterdam'
+    project_setup:
+        override: true
+    tests:
+        override:
+            - php-scrutinizer-run
+            -
+                command: 'vendor/bin/phpunit --coverage-clover=code-coverage'
+                coverage:
+                    file: 'code-coverage'
+                    format: 'clover'
+    nodes:
+        php70:
+            environment:
+                php:
+                    version: '7.0'
+        php70-sf34:
+            environment:
+                php:
+                    version: '7.0'
+            dependencies:
+                before:
+                    - command: 'composer require "symfony/symfony:3.4.*" --no-update; composer update symfony/*;'
+        php71:
+            environment:
+                php:
+                    version: '7.1'
+        php71-sf34:
+            environment:
+                php:
+                    version: '7.1'
+            dependencies:
+                before:
+                    - command: 'composer require "symfony/symfony:3.4.*" --no-update; composer update symfony/* doctrine/orm;'
+        php71-sf40:
+            environment:
+                php:
+                    version: '7.1'
+            dependencies:
+                before:
+                    - command: 'composer require "symfony/symfony:4.0.*" --no-update; composer update symfony/* doctrine/orm;'
+        php72-sf40:
+            environment:
+                php:
+                    version: '7.2'
+            dependencies:
+                before:
+                    - command: 'composer require "symfony/symfony:4.0.*" --no-update; composer update symfony/* doctrine/orm;'
+
+filter:
+    excluded_paths:
+        - src/Resources
