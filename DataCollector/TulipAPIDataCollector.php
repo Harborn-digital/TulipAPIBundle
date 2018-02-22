@@ -59,6 +59,14 @@ class TulipAPIDataCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
+    public function reset()
+    {
+        $this->data = [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return 'tulip_api';
