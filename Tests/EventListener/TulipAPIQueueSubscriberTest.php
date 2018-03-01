@@ -68,7 +68,7 @@ class TulipAPIQueueSubscriberTest extends PHPUnit_Framework_TestCase
         $unitOfWorkMock->expects($this->once())
                 ->method('getEntityChangeSet')
                 ->with($this->equalTo($objectMock))
-                ->willReturn(array('foo' => 'bar'));
+                ->willReturn(array());
 
         $objectManagerMock = $this->getMockBuilder(EntityManagerInterface::class)
                 ->getMock();
@@ -189,7 +189,7 @@ class TulipAPIQueueSubscriberTest extends PHPUnit_Framework_TestCase
         $unitOfWorkMock->expects($this->once())
                 ->method('getEntityChangeSet')
                 ->with($this->equalTo($objectMock))
-                ->willReturn(array('foo' => 'bar'));
+                ->willReturn(array());
 
         $objectManagerMock = $this->getMockBuilder(EntityManagerInterface::class)
                 ->getMock();
@@ -242,7 +242,7 @@ class TulipAPIQueueSubscriberTest extends PHPUnit_Framework_TestCase
         $unitOfWorkMock->expects($this->once())
                 ->method('getEntityChangeSet')
                 ->with($this->equalTo($objectMock))
-                ->willReturn(array('foo' => 'bar'));
+                ->willReturn(array());
 
         $objectManagerMock = $this->getMockBuilder(EntityManagerInterface::class)
                 ->getMock();
