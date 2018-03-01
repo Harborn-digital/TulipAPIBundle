@@ -62,9 +62,9 @@ class TulipAPIQueueSubscriber implements EventSubscriber
         $object = $args->getObject();
         $objectChangeset = $args->getObjectManager()->getUnitOfWork()->getEntityChangeSet($object);
 
-        unset($objectChangeset['tulipId'], $objectChangeset['createdAt'], $objectChangeset['updatedAt']);
+        unset($objectChangeset['createdAt'], $objectChangeset['updatedAt']);
 
-        if ($object instanceof TulipObjectInterface && count($objectChangeset) > 0) {
+        if ($object instanceof TulipObjectInterface && (count($objectChangeset) > 1 || isset($objectChangeset['tulipId']) === false)) {
             $this->queueManager->queueObject($object);
 
             if ($this->debug === true) {
